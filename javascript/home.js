@@ -118,14 +118,14 @@ const content = document.getElementById("mainpost");
 const showpost = allpost.posts.map((post,index)=>{
 	return `
 	<p id="heading" ><mark><b>User's ID:</b></mark>${post.userId}</p>
-	<div id="style" style="box-shadow: 0 0 10px;padding:10px">
+	<div id="style" style="box-shadow: 0 0 10px;padding:10px; border-radius:30px">
 
 	<h4 id="heading">${post.title}</h4>
 
 	<p id="body">${post.body}</p>
 	</div>
 	 <div class="likedislike">
-	 <p id="reaction"><mark><b>Reactions:</b></mark> ${post.reactions}</p>
+	 <p id="reaction">Liked by <b>${post.reactions} People</b></p>
 
 	 <p class="like">
 		<span class="nooflike" id="like1">0 </span> likes &nbsp <span class="noofdislike" id="dislike1">0 </span> dislikes
