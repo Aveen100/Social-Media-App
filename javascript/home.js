@@ -1,5 +1,6 @@
 
 
+
 /*======== Like increase =========*/
 
 function increase(likerec,dislikerec,thumbsuprec,thumbsdownrec)
@@ -122,25 +123,32 @@ const showpost = allpost.posts.map((post,index)=>{
 
 	<h4 id="heading">${post.title}</h4>
 
-	<p id="body">${post.body}</p>
+	<p id="body" onclick="getcomments(${post.id})">${post.body}</p>
 	</div>
 	 <div class="likedislike">
 	 <p id="reaction">Liked by <b>${post.reactions} People</b></p>
+	 <p id="reaction"><b>${post.tags}</b></p>
 
 	 <p class="like">
 		<span class="nooflike" id="like1">0 </span> likes &nbsp <span class="noofdislike" id="dislike1">0 </span> dislikes
 	</p>
 	<p class="likedisbttn">
 		<span id="thumbsup1" class="fa fa-thumbs-up" onclick="increase('like1','dislike1','thumbsup1','thumbsdown1');"></span> <span id="thumbsdown1" class="fa fa-thumbs-down" onclick="decrease('like1','dislike1','thumbsup1','thumbsdown1');"></span>
-	</p>
-	
+	</p><br>
+	<div class="container">
+    <textarea id="newComment" ></textarea>
+    <button id="addComments" >Add Comment</button>
 
-</div> 
+</div>
+	
 
 
 	`
 })
 content.innerHTML=showpost
+
+
+
 // console.log(allpost.posts);
 
 
@@ -148,30 +156,125 @@ content.innerHTML=showpost
 
 //Fetching comments
 
-async function getcomments(){
-	const allComment = await fetch('https://dummyjson.com/comments');
-	 
+
+
+
+
+async function getcomments(index){
+	// const arr=[];
+	console.log(index);
+
+	const allComment =  await fetch(`https://dummyjson.com/posts/${index}/comments`);
 	const comments =await allComment.json();
 	// console.log(comments,"new comment api")
 	localStorage.setItem("Comments",JSON.stringify(comments))
-	}
 	
-	getcomments();
-
-
-	const allcomments=JSON.parse(localStorage.getItem('Comments'))
-
-const showcomment = document.getElementById("likedislike");
+	// getcomments();
 
 
 
-// const displayCmnt = allcomments.comments.map((post,index)=>{
-// 	return `
-// 	<p>${post.body}</p>
+	//Display fetched comments in html
 
-// 	`
-// })
-// showcomment.innerHTML=displayCmnt
+const allcomments=JSON.parse(localStorage.getItem('Comments'))	// console.log(allcomments.comments[0].body);
+const showcomment = document.getElementById("allcomments");
 
 
+
+// console.log(allcomments.comments);
+const showcmnt = await allcomments.comments.map((cmnt,index)=>{
+	// console.log(cmnt.user.id);
+	// console.log(allcommments.username);
+	return `
+	<p><b>${cmnt.user.username} :</b></p>	
+
+	<p>${cmnt.body}</p>	
+	`
+
+})
+// console.log(allcomments.comments);
+
+showcomment.innerHTML=showcmnt;
+
+}
+
+
+
+
+
+
+//get comments by post ID
+
+// async function getpostcomments(){
+// 	const postComment = await fetch('https://dummyjson.com/comments/6');
+	 
+// 	const newpostcomment =await postComment.json();
+// 	// console.log(newCommentApi,"new comment api")
+// 	localStorage.setItem("Posts Comments",JSON.stringify(newpostcomment))
+// 	}
+	
+// 	getpostcomments();
+
+
+
+
+
+	// post comments
+
+// 	const commentContainer = document.getElementById('allComments');
+// document.getElementById('addComments').addEventListener('click', function (ev) {
+//    addComment(ev);
+// });
+
+// function addComment(ev) {
+//     let commentText, wrapDiv;
+//     const textBox = document.createElement('div');
+//     // const replyButton = document.createElement('button');
+//     // replyButton.className = 'reply';
+//     // replyButton.innerHTML = 'Reply';
+//     // const likeButton = document.createElement('button');
+//     // likeButton.innerHTML = 'Like';
+//     // likeButton.className = 'likeComment';
+//     const deleteButton = document.createElement('button');
+//     deleteButton.innerHTML = 'Delete';
+//     deleteButton.className = 'deleteComment';
+//     const wrapDivv = document.createElement('div');
+//     wrapDivv.className = 'wrapper';
+//     wrapDivv.style.marginLeft = 0;
+//     commentText = document.getElementById('newComment').value;
+//     console.log(commentText.inde);
+// 	document.getElementById('newComment').value = '';
+//     textBox.innerHTML = commentText;
+//     wrapDivv.append(textBox, deleteButton);
+	
+//     commentContainer.appendChild(wrapDivv);
+    
+// }
+
+
+
+//search posts
+
+const myysearch= document.querySelector("#search");
+async function search(e){
+    const postSearch=await fetch('https://dummyjson.com/posts/search?q=love');
+    const searchpost=await postSearch.json();
+
+    myysearch.addEventListener("input",(e)=>{
+        const searchResult= searchpost.posts.filter((i)=>i.title.toLowerCase().includes(e.target.value.toLowerCase()));
+        const resultTag= document.getElementById("mainpost");
+        console.log(e.target.value)
+        const showHtml=searchResult.map((result,index)=>{
+            return`
+            <div id="postMain">
+			<p id="post title">${result.title}</p>
+
+			<p id="postBody"><mark>${result.body}</mark></p>
+            </div>`})
+        resultTag.innerHTML = showHtml;
+    });
+
+    
+}
+
+search();
 
