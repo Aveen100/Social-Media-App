@@ -136,15 +136,14 @@ const showpost = allpost.posts.map((post,index)=>{
 		<span id="thumbsup1" class="fa fa-thumbs-up" onclick="increase('like1','dislike1','thumbsup1','thumbsdown1');"></span> <span id="thumbsdown1" class="fa fa-thumbs-down" onclick="decrease('like1','dislike1','thumbsup1','thumbsdown1');"></span>
 	</p><br>
 	<div class="container">
-    <textarea id="newComment" ></textarea>
-    <button id="addComments" >Add Comment</button>
-
-</div>
-	
+    <input type="text" id="newComment${post.id}" placeholder="Enter Comment"  ></input>
+    <button id="addComments${post.id}" onclick="Newcmnt(${post.id},${post.userId})">Add Comment</button>
+   
 
 
 	`
 })
+
 content.innerHTML=showpost
 
 
@@ -184,71 +183,43 @@ const showcomment = document.getElementById("allcomments");
 const showcmnt = await allcomments.comments.map((cmnt,index)=>{
 	// console.log(cmnt.user.id);
 	// console.log(allcommments.username);
+	
+	// console.log(cmnt.body);
+	// console.log(index);
 	return `
 	<p><b>${cmnt.user.username} :</b></p>	
-
+	
 	<p>${cmnt.body}</p>	
+	
+	<button onclick="editcmnt(${cmnt.id})">Update Comment</button>
+	<button onclick="delcmnt(${cmnt.id})">Delete</button>
+	<input type="text" id="cmntvalue" placeholder="Edit comment" value="${cmnt.body}">
 	`
 
+
+
+
+	
+
 })
+
+
+
+
 // console.log(allcomments.comments);
 
 showcomment.innerHTML=showcmnt;
 
+
 }
+// function cmnt(index){
+// 	console.log(index);
+// 	const a=document.getElementById('usercmnt').value='ss';
 
-
-
-
-
-
-//get comments by post ID
-
-// async function getpostcomments(){
-// 	const postComment = await fetch('https://dummyjson.com/comments/6');
-	 
-// 	const newpostcomment =await postComment.json();
-// 	// console.log(newCommentApi,"new comment api")
-// 	localStorage.setItem("Posts Comments",JSON.stringify(newpostcomment))
-// 	}
 	
-// 	getpostcomments();
 
 
 
-
-
-	// post comments
-
-// 	const commentContainer = document.getElementById('allComments');
-// document.getElementById('addComments').addEventListener('click', function (ev) {
-//    addComment(ev);
-// });
-
-// function addComment(ev) {
-//     let commentText, wrapDiv;
-//     const textBox = document.createElement('div');
-//     // const replyButton = document.createElement('button');
-//     // replyButton.className = 'reply';
-//     // replyButton.innerHTML = 'Reply';
-//     // const likeButton = document.createElement('button');
-//     // likeButton.innerHTML = 'Like';
-//     // likeButton.className = 'likeComment';
-//     const deleteButton = document.createElement('button');
-//     deleteButton.innerHTML = 'Delete';
-//     deleteButton.className = 'deleteComment';
-//     const wrapDivv = document.createElement('div');
-//     wrapDivv.className = 'wrapper';
-//     wrapDivv.style.marginLeft = 0;
-//     commentText = document.getElementById('newComment').value;
-//     console.log(commentText.inde);
-// 	document.getElementById('newComment').value = '';
-//     textBox.innerHTML = commentText;
-//     wrapDivv.append(textBox, deleteButton);
-	
-//     commentContainer.appendChild(wrapDivv);
-    
-// }
 
 
 
@@ -277,4 +248,75 @@ async function search(e){
 }
 
 search();
+
+
+
+// getting comments
+
+
+// function getcomments(e){
+
+// 	console.log(e);
+
+// 	var newcmnt= document.getElementById('newComment').value;
+// 	console.log(newcmnt);
+	
+
+
+
+// }
+
+// Update 
+async function editcmnt(index){
+	const getcmnt= document.getElementById('cmntvalue').value;
+const update = await fetch(`https://dummyjson.com/comments/${index}`, {
+	method: 'PUT', /* or PATCH */
+	headers: { 'Content-Type': 'application/json' },
+	body: JSON.stringify({
+	  body: getcmnt,
+	})
+
+})
+
+const NewComment =await update.json();
+console.log(NewComment);
+}
+
+
+ //Delete
+async function delcmnt(index){
+
+// const del = document.getElementById('cmntvalue').value;
+const deletecmnt = await fetch(`https://dummyjson.com/comments/${index}`, {
+	method: 'DELETE',
+  })
+
+const del= await deletecmnt.json();
+console.log(del);
+
+// console.log('ssss');
+}
+
+
+// NewCmnt
+ async function Newcmnt(post,user){
+
+console.log(post,user);
+const addcmnt= document.getElementById(`newComment${post}`).value;
+
+const neww= await fetch(`https://dummyjson.com/comments/add`, {
+	method: 'POST',
+	headers: { 'Content-Type': 'application/json' },
+	body: JSON.stringify({
+	  body: addcmnt,
+	  postId: post,
+	  userId: user,
+	})
+  }) 
+
+const add= await neww.json();
+console.log(add);
+console.log('sss');
+
+ }
 
