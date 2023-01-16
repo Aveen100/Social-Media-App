@@ -26,9 +26,6 @@ else{
 window.location.replace("../login/home.html");
 }
 
-// const user= fetch('https://dummyjson.com/posts');
-// const post = user.json();
-// localStorage.setItem("UserPosts", JSON.stringify(post))
 
 
 
